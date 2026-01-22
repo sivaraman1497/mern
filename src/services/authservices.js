@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import User from "../models/User.model.js";
 import {generateToken} from '../utils/jwtutils.js'
@@ -26,7 +25,7 @@ export const checkUser = async(email) => {
 }
 
 export const loginUser = async({email, password}) => {
-    const user = await User.findOne({email}).select('+password')
+    const user = await User.findOne({email}).select('+password')    // to get password field which is excluded by default in model
 
     if(!user) throw new Error('User does not exist');
 
