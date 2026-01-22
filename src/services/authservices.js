@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/User.model.js";
 import {generateToken} from '../utils/jwtutils.js'
 
-export const createUser = async({name, email, password}) => {
+export const createUser = async({name, email, password, role}) => {
     const userExists = await User.findOne({email})
 
     if(userExists)
@@ -13,7 +13,7 @@ export const createUser = async({name, email, password}) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
-        name, email, password: hashedPassword
+        name, email, password: hashedPassword, role
     })
 
     return user._id;
@@ -29,17 +29,17 @@ export const loginUser = async({email, password}) => {
 
     if(!user) throw new Error('User does not exist');
 
-    const userMatch = await bcrypt.compare(password, user.password);
+    const userMatch = await bcrypt.compare(password, user.password);    // Comparing plain password with hashed password
 
     if(!userMatch) throw new Error('Email or password does not match')
 
-    const token = generateToken({userid: user.id, email: user.email});
+    const token = generateToken({userid: user.id, email: user.email, role: user.role});
 
     return {
         token, 
         user: 
         {
-            id: user.id, name: user.name, email: user.email
+            id: user.id, name: user.name, email: user.email, role: user.role
         }
     };
 }

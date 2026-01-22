@@ -7,7 +7,7 @@ export const verify = (req, res, next) => {
         
         if(!token)
         {
-            res.status(401).json({message: 'Authorization failed'})
+            res.status(401).json({message: 'Authorization failed due to missing token'})
         }
 
         try
@@ -18,12 +18,12 @@ export const verify = (req, res, next) => {
         }
         catch(err)
         {
-            res.status(401).json({message:'Invalid token'});
+            res.status(401).json({message: 'Invalid token'});
             console.log(err.message)
         }
     }
 }
 
 export const profile = (req, res) => {
-    res.status(200).json({message: 'User logged in', userid: req.user.userid, email: req.user.email});
+    res.status(200).json({message: 'User logged in', userid: req.user.userid, email: req.user.email, role: req.user.role});
 }
